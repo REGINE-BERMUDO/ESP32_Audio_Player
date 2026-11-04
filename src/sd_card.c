@@ -2,6 +2,8 @@
 
 #include "esp_vfs_fat.h"
 
+#include "driver/sdmmc_host.h"
+
 #define MOUNT_POINT "/sdcard"
 #define MAX_FREQ_KHZ 40000
 #define MAX_FILES 3
@@ -37,11 +39,14 @@ esp_err_t sd_card_init()
         return ESP_ERR_INVALID_STATE;
     }
 
+    sdmmc_host_t host = SDMMC_HOST_DEFAULT();
+    host.max_freq_khz = cfg.max_freq_khz;
+
     esp_vfs_fat_sdmmc_mount_config_t mount_cfg = {
         .format_if_mount_failed = false,
         .max_files = cfg.max_files,
         .allocation_unit_size = 0
     };
 
-    esp_err_t esp_vfs_fat_sdmmc_mount(, , , &mount_cfg, &s_card);
+    esp_err_t esp_vfs_fat_sdmmc_mount(, &host, , &mount_cfg, &s_card);
 }
