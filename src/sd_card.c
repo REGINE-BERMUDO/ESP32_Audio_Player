@@ -43,5 +43,5 @@ esp_err_t sd_card_init()
         .allocation_unit_size = 0
     };
 
-    esp_err_t esp_vfs_fat_sdmmc_mount(, , , &mount_cfg, );
+    esp_err_t esp_vfs_fat_sdmmc_mount(, , , &mount_cfg, &s_card);
 }
