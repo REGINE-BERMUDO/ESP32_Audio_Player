@@ -6,6 +6,8 @@
 
 #include "esp_log.h"
 
+#include "sdmmc_cmd.h"
+
 #define MOUNT_POINT "/sdcard"
 #define MAX_FREQ_KHZ 40000
 #define MAX_FILES 3
@@ -13,9 +15,10 @@
 
 #define BUS_WIDTH 4
 
-static const char *TAG = "SD-Card";
+static const char       *TAG = "SD-Card";
 
-static sdmmc_card_t *s_card;
+static sdmmc_card_t     *s_card;
+static char             s_mount_point[16];
 
 typedef struct {
     const char *mount_point;
@@ -75,4 +78,8 @@ esp_err_t sd_card_init()
         s_card = NULL;
         return err;
     }
+
+    strlcpy(s_mount_point, cfg.mount_point, sizeof(s_mount_point));
+    sdmmc_card_print_info(stdout, s_card);
+    return ESP_OK;
 }
