@@ -13,11 +13,18 @@
 #include "sdmmc_cmd.h"
 
 #define MOUNT_POINT "/sdcard"
-#define MAX_FREQ_KHZ 40000
+#define MAX_FREQ_KHZ 20000
 #define MAX_FILES 3
 #define INTERNAL_PULLUPS false
 
 #define BUS_WIDTH 4
+
+// SPI configuration for SD-Card
+#define SD_SPI_HOST SPI2_HOST
+#define PIN_NUM_MOSI 23
+#define PIN_NUM_MISO 19
+#define PIN_NUM_CLK 18
+#define PIN_NUM_CS 5
 
 static const char       *TAG = "SD-Card";
 
