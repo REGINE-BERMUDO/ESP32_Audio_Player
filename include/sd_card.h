@@ -5,4 +5,6 @@
 
 esp_err_t sd_card_init(void);
 
+esp_err_t sd_card_test_file(void);
+
 #endif /* SD_CARD_H */

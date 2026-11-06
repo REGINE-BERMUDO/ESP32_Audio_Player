@@ -11,4 +11,6 @@ void app_main() {
         ESP_LOGE(TAG, "SD-Card Initialization Failed");
         return;
     }
+
+    sd_card_test_file();
 }

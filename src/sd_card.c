@@ -93,3 +93,28 @@ esp_err_t sd_card_init(void)
     sdmmc_card_print_info(stdout, s_card);
     return ESP_OK;
 }
+
+// Test function to write and read a file on the SD card
+esp_err_t sd_card_test_file(void)
+{
+    FILE *f = fopen(MOUNT_POINT "/test.txt", "w");
+    if(f == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to open file for writing");
+        return ESP_FAIL;
+    }
+    fprintf(f, "Hello SD card\n");
+    fclose(f);
+
+    f = fopen(MOUNT_POINT "/test.txt", "r");
+    if(f == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to open file for reading");
+        return ESP_FAIL;
+    }
+    char line[64];
+    fgets(line, sizeof(line), f);
+    fclose(f);
+    ESP_LOGI(TAG, "Read back: %s", line);
+    return ESP_OK;
+}
