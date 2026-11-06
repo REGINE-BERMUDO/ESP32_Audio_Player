@@ -13,9 +13,6 @@
 #define MOUNT_POINT "/sdcard"
 #define MAX_FREQ_KHZ 20000
 #define MAX_FILES 3
-#define INTERNAL_PULLUPS false
-
-#define BUS_WIDTH 4
 
 // SPI configuration for SD-Card
 #define SD_SPI_HOST SPI2_HOST
@@ -33,7 +30,6 @@ typedef struct {
     const char *mount_point;
     uint32_t max_freq_khz;
     int max_files;
-    bool internal_pullups;
 } sd_audio_config_t;
 
 static esp_err_t sd_spi_bus_init(void)
@@ -54,13 +50,11 @@ esp_err_t sd_card_init()
     sd_audio_config_t cfg = {
         .mount_point = MOUNT_POINT,
         .max_freq_khz = MAX_FREQ_KHZ,
-        .max_files = MAX_FILES,
-        .internal_pullups = INTERNAL_PULLUPS
+        .max_files = MAX_FILES
     };
     if(cfg.mount_point[0] == '\0' ||
        cfg.max_freq_khz != MAX_FREQ_KHZ ||
-       cfg.max_files != MAX_FILES ||
-       cfg.internal_pullups != INTERNAL_PULLUPS)
+       cfg.max_files != MAX_FILES)
     {
         return ESP_ERR_INVALID_ARG;
     }
