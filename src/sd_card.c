@@ -66,7 +66,9 @@ esp_err_t sd_card_init()
     esp_err_t err = sd_spi_bus_init();
     if(err != ESP_OK)
     {
-        ESP_LOGE(TAG, "SPI bus initialization failed (%s)", esp_err_to_name(err));
+        ESP_LOGE(TAG, "SD-Card initialization failed (%s). "
+                       "Check SPI wiring, CS pin and card power",
+                esp_err_to_name(err));
         return err;
     }
 
