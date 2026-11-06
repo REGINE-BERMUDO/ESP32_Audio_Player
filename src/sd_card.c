@@ -38,6 +38,19 @@ typedef struct {
     bool internal_pullups;
 } sd_audio_config_t;
 
+static esp_err_t sd_spi_bus_init(void)
+{
+    spi_bus_config_t bus_cfg = {
+        .mosi_io_num = PIN_NUM_MOSI,
+        .miso_io_num = PIN_NUM_MISO,
+        .sclk_io_num = PIN_NUM_CLK,
+        .quadwp_io_num = -1,
+        .quadhd_io_num = -1,
+        .max_transfer_sz = 4000,
+    };
+    return spi_bus_initialize(SD_SPI_HOST, &bus_cfg, SDSPI_DEFAULT_DMA);
+}
+
 esp_err_t sd_card_init()
 {
     sd_audio_config_t cfg = {
