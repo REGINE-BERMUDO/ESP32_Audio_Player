@@ -2,8 +2,6 @@
 
 #include "esp_vfs_fat.h"
 
-#include "driver/sdmmc_host.h"
-
 // SD-Card SPI host
 #include "driver/sdspi_host.h"
 #include "driver/spi_common.h"
