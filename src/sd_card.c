@@ -4,6 +4,10 @@
 
 #include "driver/sdmmc_host.h"
 
+// SD-Card SPI host
+#include "driver/sdspi_host.h"
+#include "driver/spi_common.h"
+
 #include "esp_log.h"
 
 #include "sdmmc_cmd.h"
