@@ -71,13 +71,20 @@ esp_err_t sd_card_init()
         return ESP_ERR_INVALID_STATE;
     }
 
-    sdmmc_host_t host = SDMMC_HOST_DEFAULT();
+    esp_err_t err = sd_spi_bus_init();
+    if(err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "SPI bus initialization failed (%s)", esp_err_to_name(err));
+        return err;
+    }
+
+    sdmmc_host_t host = SDSPI_HOST_DEFAULT();
+    host.slot = SD_SPI_HOST;
     host.max_freq_khz = cfg.max_freq_khz;
 
-    sdmmc_slot_config_t slot = SDMMC_SLOT_CONFIG_DEFAULT();
-    slot.width = BUS_WIDTH;
-    slot.cd = SDMMC_SLOT_NO_CD;
-    slot.wp = SDMMC_SLOT_NO_WP;
+    sdspi_device_config_t slot = SDSPI_DEVICE_CONFIG_DEFAULT();
+    slot.gpio_cs = PIN_NUM_CS;
+    slot.host_id = SD_SPI_HOST;
 
     esp_vfs_fat_sdmmc_mount_config_t mount_cfg = {
         .format_if_mount_failed = false,
@@ -85,23 +92,7 @@ esp_err_t sd_card_init()
         .allocation_unit_size = 0
     };
 
-    esp_err_t err = esp_vfs_fat_sdmmc_mount(cfg.mount_point, &host, &slot, &mount_cfg, &s_card);
-    if(err != ESP_OK)
-    {
-        if(err == ESP_FAIL)
-        {
-            ESP_LOGE(TAG, "Partition cannot be mounted");
-        }
-        else
-        {
-            ESP_LOGE(TAG, "SD-Card initialization failed (%s). "
-                          "Check wiring and the 10k pull-ups on CMD/D0-D3",
-                          esp_err_to_name(err)
-            );
-        }
-        s_card = NULL;
-        return err;
-    }
+    err = esp_vfs_fat_sdspi_mount(cfg.mount_point, &host, &slot, &mount_cfg, &s_card);
 
     strlcpy(s_mount_point, cfg.mount_point, sizeof(s_mount_point));
     sdmmc_card_print_info(stdout, s_card);
