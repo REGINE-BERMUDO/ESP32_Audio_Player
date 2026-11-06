@@ -45,7 +45,8 @@ static esp_err_t sd_spi_bus_init(void)
     return spi_bus_initialize(SD_SPI_HOST, &bus_cfg, SDSPI_DEFAULT_DMA);
 }
 
-esp_err_t sd_card_init()
+
+esp_err_t sd_card_init(void)
 {
     sd_audio_config_t cfg = {
         .mount_point = MOUNT_POINT,
