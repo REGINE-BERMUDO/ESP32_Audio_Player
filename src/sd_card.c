@@ -11,11 +11,11 @@
 #include "sdmmc_cmd.h"
 
 #define MOUNT_POINT "/sdcard"
-#define MAX_FREQ_KHZ 20000
+#define MAX_FREQ_KHZ 16000
 #define MAX_FILES 3
 
 // SPI configuration for SD-Card
-#define SD_SPI_HOST SPI2_HOST
+#define SD_SPI_HOST SPI3_HOST
 #define PIN_NUM_MOSI 23
 #define PIN_NUM_MISO 19
 #define PIN_NUM_CLK 18
@@ -88,6 +88,13 @@ esp_err_t sd_card_init(void)
     };
 
     err = esp_vfs_fat_sdspi_mount(cfg.mount_point, &host, &slot, &mount_cfg, &s_card);
+    if(err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Mount failed (%s)", esp_err_to_name(err));
+        s_card = NULL;
+        spi_bus_free(SD_SPI_HOST);
+        return err;
+    }
 
     strlcpy(s_mount_point, cfg.mount_point, sizeof(s_mount_point));
     sdmmc_card_print_info(stdout, s_card);
