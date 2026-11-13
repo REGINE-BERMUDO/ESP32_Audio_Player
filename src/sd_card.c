@@ -10,6 +10,9 @@
 
 #include "sdmmc_cmd.h"
 
+#include "dirent.h"
+#include "sys/stat.h"
+
 #define MOUNT_POINT     "/sdcard"
 #define MUSIC_DIR       "/sdcard/Music/"
 #define MAX_FREQ_KHZ    16000
@@ -101,27 +104,47 @@ esp_err_t sd_card_init(void)
     return ESP_OK;
 }
 
-// Test function to write and read a file on the SD card
+// List music files from sd-card
 esp_err_t sd_card_test_file(void)
 {
-    FILE *f = fopen(MOUNT_POINT "/test.txt", "w");
-    if(f == NULL)
+    if(s_card == NULL)
     {
-        ESP_LOGE(TAG, "Failed to open file for writing");
-        return ESP_FAIL;
+        return ESP_ERR_INVALID_STATE;
     }
-    fprintf(f, "Hello SD card\n");
-    fclose(f);
 
-    f = fopen(MOUNT_POINT "/test.txt", "r");
-    if(f == NULL)
+    DIR *d = opendir(MUSIC_DIR);
+    if(d == NULL)
     {
-        ESP_LOGE(TAG, "Failed to open file for reading");
-        return ESP_FAIL;
+        ESP_LOGE(TAG, "Cannot open %s (folder missing or name mismatch)", MUSIC_DIR);
+        return ESP_ERR_NOT_FOUND;
     }
-    char line[64];
-    fgets(line, sizeof(line), f);
-    fclose(f);
-    ESP_LOGI(TAG, "Read back: %s", line);
+    ESP_LOGI(TAG, "Files in %s:", MUSIC_DIR);
+
+    char path[300];
+    unsigned count = 0;
+    struct dirent *e;
+    while((e = readdir(d)) != NULL)
+    {
+        if(strcmp(e->d_name, ".") == 0 || strcmp(e->d_name, "..") == 0)
+        {
+            continue;
+        }
+
+        snprintf(path, sizeof(path), "%s/%s", MUSIC_DIR, e->d_name);
+
+        struct stat st;
+        if(stat(path, &st) == 0)
+        {
+            ESP_LOGI(TAG, " %s (%lu bytes)", e->d_name, (unsigned long)st.st_size);
+        }
+        else
+        {
+            ESP_LOGI(TAG, " %s", e->d_name);
+        }
+        count++;
+    }
+    closedir(d);
+
+    ESP_LOGI(TAG, "%u item(s) found", count);
     return ESP_OK;
 }
