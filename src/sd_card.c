@@ -135,11 +135,11 @@ esp_err_t sd_card_test_file(void)
         struct stat st;
         if(stat(path, &st) == 0)
         {
-            ESP_LOGI(TAG, " %s (%lu bytes)", e->d_name, (unsigned long)st.st_size);
+            ESP_LOGI(TAG, "\t%s (%lu bytes)", e->d_name, (unsigned long)st.st_size);
         }
         else
         {
-            ESP_LOGI(TAG, " %s", e->d_name);
+            ESP_LOGI(TAG, "\t%s", e->d_name);
         }
         count++;
     }
