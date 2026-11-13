@@ -8,5 +8,7 @@ idf_component_register(
     REQUIRES fatfs
     esp_driver_spi
     esp_driver_sdspi
+    esp_driver_i2s
+    esp_timer
     sdmmc
 )
