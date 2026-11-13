@@ -1,0 +1,3 @@
+# Set ESP CPU Frequeny to 240MHz to accomodate for the MP3 Decoder's CPU Usage.
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_160=n
