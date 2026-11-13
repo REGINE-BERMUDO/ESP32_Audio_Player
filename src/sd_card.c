@@ -10,16 +10,17 @@
 
 #include "sdmmc_cmd.h"
 
-#define MOUNT_POINT "/sdcard"
-#define MAX_FREQ_KHZ 16000
-#define MAX_FILES 3
+#define MOUNT_POINT     "/sdcard"
+#define MUSIC_DIR       "/sdcard/Music/"
+#define MAX_FREQ_KHZ    16000
+#define MAX_FILES       3
 
 // SPI configuration for SD-Card
-#define SD_SPI_HOST SPI3_HOST
-#define PIN_NUM_MOSI 23
-#define PIN_NUM_MISO 19
-#define PIN_NUM_CLK 18
-#define PIN_NUM_CS 5
+#define SD_SPI_HOST     SPI3_HOST
+#define PIN_NUM_MOSI    23
+#define PIN_NUM_MISO    19
+#define PIN_NUM_CLK     18
+#define PIN_NUM_CS      5
 
 static const char       *TAG = "SD-Card";
 
@@ -44,7 +45,6 @@ static esp_err_t sd_spi_bus_init(void)
     };
     return spi_bus_initialize(SD_SPI_HOST, &bus_cfg, SDSPI_DEFAULT_DMA);
 }
-
 
 esp_err_t sd_card_init(void)
 {
